@@ -1,13 +1,19 @@
-import React, {useState} from 'react'
+import React, {useState, useEffect} from 'react'
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
-import { BiLeftArrowAlt } from 'react-icons/bi';
-import { cols } from '../data/data';
+import { cols, userData } from '../data/data';
+import {BiPlusMedical} from 'react-icons/bi'
+import ModalAddTask from './ModalAddTask';
 
-function Board() {
-    const [columns, setColumns] = useState(cols);
-
+function Board({board}) {
+    
+    const [columns, setColumns] = useState(board.columns);
+    const [showModal, setShowModal] = useState(false);
+    // useEffect(() => {
+    //     setColumns(board.columns);
+    // }, [board]);
+    // console.log(board.columns)
+    // console.log(columns);
     function onDragEnd(result) {
-
         const { source, destination, draggableId } = result;
 
         // If the draggable item was dropped outside of any droppable area, exit early
@@ -15,10 +21,23 @@ function Board() {
             return;
         }
 
-        // If the draggable item was dropped in the same position, exit early
-        if (destination.droppableId === source.droppableId && destination.index === source.index) {
-            return;
+        // If the draggable item was dropped in the same column, exit if in the same index
+        // reorder if in different index
+        if (destination.droppableId === source.droppableId ) {
+            if(destination.index === source.index){
+                return;
+            }else{
+                const column = columns.find((column) => column.id === source.droppableId);
+                const newItems = [...column.items];
+                const [removed] = newItems.splice(source.index, 1);
+                newItems.splice(destination.index, 0, removed);
+                const newColumns = [...columns];
+                newColumns.find((column) => column.id === source.droppableId).items = newItems;
+                setColumns(newColumns);
+                return;
+            }
         }
+
 
         // Find the column corresponding to the source droppable area
         const sourceColumn = columns.find((column) => column.id === source.droppableId);
@@ -44,58 +63,8 @@ function Board() {
         setColumns(newColumns);
     }
 
-    // function onDragEnd(val) {
-        // // Your version
-        // // let result = helper.reorder(val.source, val.destination, taskList);
-        // // setTasks(result);
-    
-        // /// A different way!
-        // const { draggableId, source, destination } = val;
-    
-        // const [sourceGroup] = taskList.filter(
-        //   column => column.groupName === source.droppableId
-        // );
-    
-        // // Destination might be `null`: when a task is
-        // // dropped outside any drop area. In this case the
-        // // task reamins in the same column so `destination` is same as `source`
-        // const [destinationGroup] = destination
-        //   ? taskList.filter(column => column.groupName === destination.droppableId)
-        //   : { ...sourceGroup };
-    
-        // // We save the task we are moving
-        // const [movingTask] = sourceGroup.tasks.filter(t => t.id === draggableId);
-    
-        // const newSourceGroupTasks = sourceGroup.tasks.splice(source.index, 1);
-        // const newDestinationGroupTasks = destinationGroup.tasks.splice(
-        //   destination.index,
-        //   0,
-        //   movingTask
-        // );
-    
-        // // Mapping over the task lists means that you can easily
-        // // add new columns
-        // const newTaskList = taskList.map(column => {
-        //   if (column.groupName === source.groupName) {
-        //     return {
-        //       groupName: column.groupName,
-        //       tasks: newSourceGroupTasks
-        //     };
-        //   }
-        //   if (column.groupName === destination.groupName) {
-        //     return {
-        //       groupName: column.groupName,
-        //       tasks: newDestinationGroupTasks
-        //     };
-        //   }
-        //   return column;
-        // });
-        // setTasks(newTaskList);
-    //   }
-    
 
-
-    let backgroundColor, textColor
+    // for column heading
     const colorPalette = (type)=>{
         switch(type){
             case 'todo':
@@ -111,7 +80,21 @@ function Board() {
         }
     }
 
-    
+
+    // modal
+    const handleAddMore = () => {
+        setShowModal(true);
+    };
+
+    const handleCloseModal = () => {
+        setShowModal(false);
+    };
+
+    const handleSubmit = (data) => {
+        console.log(data);
+    };
+
+
   return (
     <div className="board-container">
         <DragDropContext onDragEnd={onDragEnd}>
@@ -132,31 +115,42 @@ function Board() {
                         <h2
                         style={colorPalette(column.id)}
                         >{column.title} (<span>{column.items.length}</span>) </h2>
+
+                        <div onClick={handleAddMore} className="item add-task">
+                            <BiPlusMedical/> Add new task
+                        </div>
                         {column.items.map((item, index) => (
-                        <Draggable key={item.id} draggableId={item.id} index={index}>
-                            {(provided, snapshot) => (
-                            <div
-                                className="item"
-                                {...provided.draggableProps}
-                                {...provided.dragHandleProps}
-                                ref={provided.innerRef}
-                                style={{
-                                backgroundColor: snapshot.isDragging ? '#263B4A' : '#404258',
-                                ...provided.draggableProps.style
-                                }}
-                            >
-                                {item.content}
-                            </div>
-                            )}
-                        </Draggable>
+                            
+                                <Draggable key={item.id} draggableId={item.id} index={index}>
+                                {(provided, snapshot) => (
+                                <div
+                                    className="item"
+                                    {...provided.draggableProps}
+                                    {...provided.dragHandleProps}
+                                    ref={provided.innerRef}
+                                    style={{
+                                    backgroundColor: snapshot.isDragging ? 'rgba(43, 45, 49, 0.5)' : 'rgba(43, 45, 49, 1)',
+                                    ...provided.draggableProps.style
+                                    }}
+                                >
+                                    {item.content}
+                                </div>
+                                )}
+                                </Draggable>
+                            
+                        
                         ))}
                         {provided.placeholder}
+
+                        
                     </div>
                     )}
                 </Droppable>
                 ))}
             </div>
         </DragDropContext>
+
+        {showModal && <ModalAddTask onClose={handleCloseModal} onSubmit={handleSubmit}/>}
     </div>
   )
 }
