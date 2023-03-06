@@ -3,7 +3,6 @@ import {BiDockRight, BiPlusMedical} from 'react-icons/bi'
 
 
 function Sidebar({ boards, onBoardClick }) {
-
     const [activeCollect, setActiveCollect] = useState(0); // active collection
     const listCollection = useRef([])
     const handleClick = (index) => {
@@ -17,7 +16,7 @@ function Sidebar({ boards, onBoardClick }) {
         <div className="bottom">
         <div className="bottom-wrapper">
             <div className="heading">
-                ALL BOARDS (<span>3</span>)
+                ALL BOARDS (<span>{boards.length}</span>)
             </div>
             
             <ul className="board-list">

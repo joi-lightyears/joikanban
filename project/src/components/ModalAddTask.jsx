@@ -1,9 +1,8 @@
 import React, {useState} from 'react'
 
-function ModalAddTask({onClose, handleSubmit}) {
+function ModalAddTask({onAddCloumnId,onClose, onSubmit}) {
 
-    const [title, setTitle] = useState("");
-    const [detail, setDetail] = useState("");
+    const [status, setStatus] = useState(onAddCloumnId);
 
     const handleCloseOutside = (e) => {
         e.stopPropagation();
@@ -15,7 +14,7 @@ function ModalAddTask({onClose, handleSubmit}) {
             
             <h2>Add new task</h2>
 
-            <form className='modalInput' onSubmit={handleSubmit}>
+            <form className='modalInput' onSubmit={onSubmit}>
                 <label htmlFor="title">Title:</label>
                 <input
                     type="text"
@@ -24,18 +23,18 @@ function ModalAddTask({onClose, handleSubmit}) {
                     required
                 />
                 {/* <br /> */}
-                <label htmlFor="detail">Detail:</label>
+                <label htmlFor="description">Description:</label>
                 <textarea
-                    id="detail"
-                    name="detail"
+                    id="description"
+                    name="description"
                     // rows="10"
                     required
                 />
 
                 <label htmlFor="status">Status:</label>
-                <select id="status" name="status">
+                <select value={status} id="status" name="status" onChange={(e)=>setStatus(e.target.value)} >
                     <option value="todo">To Do</option>
-                    <option value="inprogress">In Progress</option>
+                    <option value="in-progress">In Progress</option>
                     <option value="blocked">Blocked</option>
                     <option value="done">Done</option>
                 </select>

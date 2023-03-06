@@ -3,11 +3,16 @@ import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import { cols, userData } from '../data/data';
 import {BiPlusMedical} from 'react-icons/bi'
 import ModalAddTask from './ModalAddTask';
+import ModalInfoTask from './ModalInfoTask';
+import { v4 as uid } from 'uuid';
 
 function Board({board}) {
     
     const [columns, setColumns] = useState(board.columns);
     const [showModal, setShowModal] = useState(false);
+    const [showModalInfo, setShowModalInfo] = useState(false);
+    const [selectedColumn, setSelectedColumn] = useState({});
+    const [selectedTask, setSelectedTask] = useState({});
     // useEffect(() => {
     //     setColumns(board.columns);
     // }, [board]);
@@ -15,7 +20,7 @@ function Board({board}) {
     // console.log(columns);
     function onDragEnd(result) {
         const { source, destination, draggableId } = result;
-
+        // console.log(result);
         // If the draggable item was dropped outside of any droppable area, exit early
         if (!destination) {
             return;
@@ -44,6 +49,9 @@ function Board({board}) {
 
         // Find the item that was dragged
         const draggedItem = sourceColumn.items.find((item) => item.id === draggableId);
+        // console.log(draggedItem)
+        //update status of that task when dragged
+        draggedItem.status = destination.droppableId;
 
         // Remove the item from the source column
         const newSourceItems = [...sourceColumn.items];
@@ -82,16 +90,59 @@ function Board({board}) {
 
 
     // modal
-    const handleAddMore = () => {
+    const handleInfoTask = () => {
+        setShowModalInfo(true);
+    }
+    const handleAddMore = (columnId) => {
+        setSelectedColumn(columnId);
         setShowModal(true);
     };
 
     const handleCloseModal = () => {
         setShowModal(false);
+        setShowModalInfo(false);
     };
 
-    const handleSubmit = (data) => {
-        console.log(data);
+
+    const handleSelectOptionChange = (oldStatus, newStatus, taskId) => {
+        const indexOldTask = columns.find((column) => column.id === oldStatus).items.findIndex((item) => item.id === taskId);
+        const lengthNewTask = columns.find((column) => column.id === newStatus).items.length;
+        const tempResult = {
+            destination: {
+                droppableId: newStatus,
+                index: lengthNewTask,
+            },
+            draggableId: taskId,
+            source: {
+                droppableId: oldStatus,
+                index: indexOldTask,
+            }
+        }
+        onDragEnd(tempResult);
+    }
+
+    const handleSubmit = (e) => {
+        e.preventDefault()
+        // console.log(e);
+        const title = e.target.title.value;
+        const description = e.target.description.value;
+        const status = e.target.status.value;
+        // console.log(title, description, status);
+
+
+        const newColumns = [...columns];
+        const newItems = [...newColumns.find((column) => column.id === status).items];
+        newItems.push({
+            id: uid(),
+            title: title,
+            description: description,
+            status: status
+        });
+        // console.log(newItems);
+        newColumns.find((column) => column.id === status).items = newItems;
+        setColumns(newColumns);
+        setShowModal(false);
+
     };
 
 
@@ -116,7 +167,7 @@ function Board({board}) {
                         style={colorPalette(column.id)}
                         >{column.title} (<span>{column.items.length}</span>) </h2>
 
-                        <div onClick={handleAddMore} className="item add-task">
+                        <div onClick={()=>handleAddMore(column.id)} className="item add-task">
                             <BiPlusMedical/> Add new task
                         </div>
                         {column.items.map((item, index) => (
@@ -125,6 +176,7 @@ function Board({board}) {
                                 {(provided, snapshot) => (
                                 <div
                                     className="item"
+                                    onClick={()=>{setSelectedTask(item); handleInfoTask();}}
                                     {...provided.draggableProps}
                                     {...provided.dragHandleProps}
                                     ref={provided.innerRef}
@@ -133,7 +185,7 @@ function Board({board}) {
                                     ...provided.draggableProps.style
                                     }}
                                 >
-                                    {item.content}
+                                    {item.title}
                                 </div>
                                 )}
                                 </Draggable>
@@ -150,7 +202,8 @@ function Board({board}) {
             </div>
         </DragDropContext>
 
-        {showModal && <ModalAddTask onClose={handleCloseModal} onSubmit={handleSubmit}/>}
+        {showModal && <ModalAddTask onAddCloumnId={selectedColumn}  onClose={handleCloseModal} onSubmit={handleSubmit}/>}
+        {showModalInfo && <ModalInfoTask selectChange={handleSelectOptionChange} infoTask={selectedTask}  onClose={handleCloseModal} onSubmit={handleSubmit}/>}
     </div>
   )
 }
