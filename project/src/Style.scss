@@ -331,8 +331,11 @@ p.by a{
             color: #828fa3;
             cursor: pointer;
             transition: 0.3s ease-out;
+            border-radius: 5px;
             &:hover{
                 color: #828fa3;
+                background: #202225;
+
             }
         }
     }
@@ -418,8 +421,9 @@ p.by a{
     display: flex;
     justify-content: center;
     align-items: center;
-
+    
     .modal{
+        width: 30%;
         width: 30%;
         // height: 80%;
         background-color: #2c2f33;
@@ -427,6 +431,72 @@ p.by a{
         display: flex;
         flex-direction: column;
         justify-content: space-between;
+        position: relative;
+        .btn-section{
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            div{
+                padding: 10px 55px;
+                border-radius: 10px;
+                user-select: none;
+                cursor: pointer;
+                transition: 0.3s ease-out;
+            }
+            .delete-btn{
+                background: #ea5555;
+                &:hover{
+                    opacity: 0.5;
+                }
+            }
+            .cancel-btn{
+                background: #7c82bb;
+                &:hover{
+                    opacity: 0.5;
+                }
+            }
+        }
+        .moreInfoTask{
+            position: absolute;
+            top: 55px;
+            right: -10px;
+            .container{
+                background: #1e1f22;
+                padding: 10px;
+                border-radius: 10px;
+                div{
+                    user-select: none;
+                    padding: 10px 20px;
+                    border-radius: 9px;
+                    transition: 0.3s ease-out;
+                    cursor: pointer;
+                }
+                .delete{
+                    color: #ea5555;
+                    &:hover{
+                        background: #2b2d31;
+                    }
+                }
+                .edit{
+                    &:hover{
+                        background: #2b2d31;
+                    }
+                }
+            }
+        }
+        h1{
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #ea5555;
+        }
+        p{
+            color: #828fa3;
+            max-height: 100px;
+            overflow: auto;
+            span{
+                font-weight: 700;
+            }
+        }
         h2{
             font-size: 1.5rem;
             font-weight: 700;
@@ -436,6 +506,28 @@ p.by a{
 
             padding: 20px;
         }
+
+        .header-info-task{
+            display: flex;
+            justify-content: space-between;
+            padding: 20px;
+            h2{
+                padding: 0 !important;
+            }
+            .more-icon{
+                font-size: 1.8rem;
+                color: #828fa3;
+                cursor: pointer;
+                transition: 0.3s ease-out;
+                border-radius: 5px;
+                &:hover{
+                    color: #828fa3;
+                    background: #202225;
+    
+                }
+            }
+        }
+
         .modalInput{
 
 

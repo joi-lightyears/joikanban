@@ -4,6 +4,8 @@ import { cols, userData } from '../data/data';
 import {BiPlusMedical} from 'react-icons/bi'
 import ModalAddTask from './ModalAddTask';
 import ModalInfoTask from './ModalInfoTask';
+import ModalEdit from './ModalEdit';
+import ModalDelete from './ModalDelete';
 import { v4 as uid } from 'uuid';
 
 function Board({board}) {
@@ -11,6 +13,8 @@ function Board({board}) {
     const [columns, setColumns] = useState(board.columns);
     const [showModal, setShowModal] = useState(false);
     const [showModalInfo, setShowModalInfo] = useState(false);
+    const [showModalEdit, setShowModalEdit] = useState(false);
+    const [showModalDelete, setShowModalDelete] = useState(false);
     const [selectedColumn, setSelectedColumn] = useState({});
     const [selectedTask, setSelectedTask] = useState({});
     // useEffect(() => {
@@ -101,6 +105,8 @@ function Board({board}) {
     const handleCloseModal = () => {
         setShowModal(false);
         setShowModalInfo(false);
+        setShowModalEdit(false);
+        setShowModalDelete(false);
     };
 
 
@@ -145,6 +151,54 @@ function Board({board}) {
 
     };
 
+    const handleEdit = (e) => {
+        setShowModalEdit(false);
+        e.preventDefault()
+        const title = e.target.title.value;
+        const description = e.target.description.value;
+        const status = e.target.status.value;
+        const indexOldTask = columns.find((column) => column.id === selectedTask.status).items.findIndex((item) => item.id === selectedTask.id);
+
+        selectedTask.title = title;
+        selectedTask.description = description;
+
+        // console.log(e);
+
+        // const newColumns = [...columns];
+
+        if(selectedTask.status !== status){
+            const lengthNewTask = columns.find((column) => column.id === status).items.length;
+            const tempResult = {
+                destination: {
+                    droppableId: status,
+                    index: lengthNewTask,
+                },
+                draggableId: selectedTask.id,
+                source: {
+                    droppableId: selectedTask.status,
+                    index: indexOldTask,
+                }
+            }
+            onDragEnd(tempResult);
+        }else{
+            const newItems = [...columns.find((column) => column.id === selectedTask.status).items];
+            newItems[indexOldTask] = selectedTask;
+            const newColumns = [...columns];
+            newColumns.find((column) => column.id === selectedTask.status).items = newItems;
+            setColumns(newColumns);
+        }
+        
+
+    }
+    const handleDelete = () => {
+        const indexOldTask = columns.find((column) => column.id === selectedTask.status).items.findIndex((item) => item.id === selectedTask.id);
+        const newItems = [...columns.find((column) => column.id === selectedTask.status).items];
+        newItems.splice(indexOldTask, 1);
+        const newColumns = [...columns];
+        newColumns.find((column) => column.id === selectedTask.status).items = newItems;
+        setColumns(newColumns);
+        setShowModalDelete(false);
+    }
 
   return (
     <div className="board-container">
@@ -203,7 +257,9 @@ function Board({board}) {
         </DragDropContext>
 
         {showModal && <ModalAddTask onAddCloumnId={selectedColumn}  onClose={handleCloseModal} onSubmit={handleSubmit}/>}
-        {showModalInfo && <ModalInfoTask selectChange={handleSelectOptionChange} infoTask={selectedTask}  onClose={handleCloseModal} onSubmit={handleSubmit}/>}
+        {showModalInfo && <ModalInfoTask setShowModalDelete={setShowModalDelete} setShowModalInfo={setShowModalInfo} setShowModalEdit={setShowModalEdit} selectChange={handleSelectOptionChange} infoTask={selectedTask}  onClose={handleCloseModal} onSubmit={handleSubmit}/>}
+        {showModalEdit && <ModalEdit infoTask={selectedTask} onClose={handleCloseModal} onSubmit={handleEdit} />}
+        {showModalDelete && <ModalDelete handleDelete={handleDelete} onClose={handleCloseModal} setShowModalInfo={setShowModalInfo} setShowModalDelete={setShowModalDelete} infoTask={selectedTask}/>}
     </div>
   )
 }

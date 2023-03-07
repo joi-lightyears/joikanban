@@ -1,9 +1,11 @@
 import React, {useState} from 'react'
 import {BsPersonCircle} from 'react-icons/bs'
 import {BiDotsVerticalRounded} from 'react-icons/bi'
+import ModalEditBoard from './ModalEditBoard';
 
 function Header({board}) {
   const [isChecked, setIsChecked] = useState(true);
+  const [showModalEditBoard, setShowModalEditBoard] = useState(false);
   return (
     <div className="header-container">
         <div className="collection-heading">
@@ -28,7 +30,7 @@ function Header({board}) {
           <div className="more">
               <BiDotsVerticalRounded className='more-icon'/>
           </div>
-          
+          {showModalEditBoard && <ModalEditBoard/>}
         </div>    
     </div>
   )
