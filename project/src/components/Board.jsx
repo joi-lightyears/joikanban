@@ -1,6 +1,5 @@
 import React, {useState, useEffect} from 'react'
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
-import { cols, userData } from '../data/data';
 import {BiPlusMedical} from 'react-icons/bi'
 import ModalAddTask from './ModalAddTask';
 import ModalInfoTask from './ModalInfoTask';

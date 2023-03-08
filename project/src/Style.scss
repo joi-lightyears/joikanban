@@ -213,6 +213,7 @@ p.by a{
     left: 0;
     min-width: 25%;
     height: 100vh;
+    z-index: 10;
     .logo{
         // color: #56acf7;
         display: flex;
@@ -237,6 +238,14 @@ p.by a{
         .footer{
             font-size: 0.9rem;
             color: #828fa3;
+            a{
+                color:  #6599f6;
+                text-decoration: none;
+                transition: 0.3s ease-out;
+                &:hover{
+                    color: #945ff1;
+                }
+            }
         }
 
         .bottom-wrapper{
@@ -244,6 +253,7 @@ p.by a{
             margin-right: 20px;
             padding-top: 20px;
             font-weight: 500;
+            
             .heading{
                 color: #828fa3;
                 font-size: 1rem;
@@ -325,6 +335,9 @@ p.by a{
             &:hover{
                 color: #708bf5;
             }
+        }
+        .more{
+            position: relative;
         }
         .more-icon{
             font-size: 1.8rem;
@@ -411,6 +424,7 @@ p.by a{
 
 
 .modal-container{
+    // z-index: 300;
     position: fixed;
     top: 50%;
     left: 50%;
@@ -632,6 +646,74 @@ p.by a{
                 }
             }
            
+        }
+    }
+}
+
+// modal header
+.modal-header{
+    position: absolute;
+    right: 0;
+    z-index: 10;
+    width: 200px;
+    .container{
+        background: #2b2d31;
+        padding: 10px 30px 10px 20px;
+        border-radius: 12px;
+        div{
+            padding: 10px 0;
+            transition: 0.3s ease-out;
+            user-select: none;
+            cursor: pointer;
+        }
+        .edit-board{
+            color: #c5ccd8;
+            &:hover{
+                opacity: 0.5;
+            }
+        }
+        .delete-board{
+            color: #ea5555;
+            &:hover{
+                opacity: 0.5;
+            }
+        }
+    }
+}
+
+.no-board-found{
+    margin-left: 25%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: calc(100vh - 90px);
+
+    .container{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 20px;
+
+        h2{
+            font-size: 1.1rem;
+            font-weight: 500;
+            color: #c5ccd8;
+        }
+        .create-new-board-btn{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            font-weight: 500;
+            user-select: none;
+            cursor: pointer;
+            padding: 10px 20px;
+            border-radius: 9px;
+            transition: 0.3s ease-out;
+            background: #935ef1;
+            &:hover{
+                opacity: 0.5;
+            }
         }
     }
 }

@@ -1,10 +1,11 @@
-import React, { useRef, useState } from 'react'
+import React, { useRef, useState, useEffect } from 'react'
 import {BiDockRight, BiPlusMedical} from 'react-icons/bi'
+import ModalAddBoard from './ModalAddBoard';
 
 
-function Sidebar({ boards, onBoardClick }) {
-    const [activeCollect, setActiveCollect] = useState(0); // active collection
+function Sidebar({activeCollect, setActiveCollect, setSelectedBoardId, boards, onBoardClick }) {
     const listCollection = useRef([])
+    const [showModalAddBoard, setShowModalAddBoard] = useState(false)
     const handleClick = (index) => {
         setActiveCollect(index)
     }
@@ -23,6 +24,7 @@ function Sidebar({ boards, onBoardClick }) {
 
 
                 {boards.map((board, index) => (
+                
                     <li 
                     key={index}
                     ref={el => listCollection.current[index] = el}
@@ -31,17 +33,22 @@ function Sidebar({ boards, onBoardClick }) {
                         handleClick(index)}}
 
                     className={`collection ${activeCollect===index? 'active' : ''}`}><BiDockRight/> <span>{board.title}</span> </li>
-                ))}
+                    
+                    ))}
+
+                    <li
+                    key={boards.length}
+                    // ref={el => listCollection.current[boards.length] = el}
+                    onClick={() => setShowModalAddBoard(true)}
+                    className='collection'><BiDockRight/> <BiPlusMedical/> <span>Create New Board</span></li>              
                 
 
-                <li 
-                ref={el => listCollection.current[3] = el}
-                onClick={() => handleClick(3)}
-                className={`collection ${activeCollect===3? 'active' : ''}`}><BiDockRight/> <BiPlusMedical/> <span>Create New Board</span></li>
+                
             </ul>
         </div>
+        {showModalAddBoard && <ModalAddBoard setSelectedBoardId={setSelectedBoardId} setActiveCollect={setActiveCollect} boards={boards} setShowModalAddBoard={setShowModalAddBoard}/>}
         <div className="footer">
-            Made by Nguyen Thanh Dat
+        Made by <a href="https://github.com/joi-lightyears" target="_blank" rel="noopener noreferrer">Nguyen Thanh Dat</a> 
         </div>
         </div>
         
