@@ -48,7 +48,7 @@ function Sidebar({activeCollect, setActiveCollect, setSelectedBoardId, boards, o
         </div>
         {showModalAddBoard && <ModalAddBoard setSelectedBoardId={setSelectedBoardId} setActiveCollect={setActiveCollect} boards={boards} setShowModalAddBoard={setShowModalAddBoard}/>}
         <div className="footer">
-        Made by <a href="https://github.com/joi-lightyears" target="_blank" rel="noopener noreferrer">Nguyen Thanh Dat</a> 
+            Made by <a href="https://github.com/joi-lightyears" target="_blank" rel="noopener noreferrer">Nguyen Thanh Dat</a> 
         </div>
         </div>
         
