@@ -328,7 +328,10 @@ p.by a{
         align-items: center;
         justify-content: center;
         gap: 20px;
+        .user-profile{
+            position: relative;
 
+        }
         .avatar{
             font-size: 1.8rem;
             color: #945ff2;
@@ -439,7 +442,6 @@ p.by a{
     align-items: center;
     
     .modal{
-        width: 30%;
         width: 30%;
         // height: 80%;
         background-color: #2c2f33;
@@ -682,6 +684,38 @@ p.by a{
         }
     }
 }
+.modal-logout{
+    position: absolute;
+    right: 0;
+    z-index: 10;
+    width: 200px;
+    .container{
+        background: #2b2d31;
+        padding: 10px 30px 10px 20px;
+        border-radius: 12px;
+        div{
+            padding: 10px 0;
+            transition: 0.3s ease-out;
+            user-select: none;
+        }
+        .name{
+            color: #c5ccd8;
+        }
+        .logout{
+            color: #ea5555;
+            cursor: pointer;
+
+            &:hover{
+                opacity: 0.5;
+            }
+        }
+    }
+}
+
+
+
+
+
 
 .no-board-found{
     margin-left: 25%;

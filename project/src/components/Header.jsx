@@ -4,6 +4,7 @@ import {BiDotsVerticalRounded} from 'react-icons/bi'
 import ModalEditBoard from './ModalEditBoard';
 import ModalDeleteBoard from './ModalDeleteBoard'
 import ModalEditDetailBoard from './ModalEditDetailBoard';
+import ModalLogout from './ModalLogout';
 
 
 function Header({setFakeState, selectedBoardId, setActiveCollect, setSelectedBoardId, boards}) {
@@ -11,7 +12,9 @@ function Header({setFakeState, selectedBoardId, setActiveCollect, setSelectedBoa
   const [showModalEditBoard, setShowModalEditBoard] = useState(false);
   const [showModalDeleteBoard, setShowModalDeleteBoard] = useState(false);
   const [showModalEditDetailBoard, setShowModalEditDetailBoard] = useState(false);
+  const [showModalLogout, setShowModalLogout] = useState(false);
   const board = boards.find((board) => board.id === selectedBoardId);
+
 
   return (
     <div className="header-container">
@@ -31,8 +34,9 @@ function Header({setFakeState, selectedBoardId, setActiveCollect, setSelectedBoa
             <i className="fa fa-moon-o" aria-hidden="true"></i>
           </div>
 
-          <div className="user-profile">
+          <div className="user-profile" onClick={()=>setShowModalLogout(!showModalLogout)}>
               <BsPersonCircle className='avatar'/>
+              {showModalLogout && <ModalLogout setShowModalLogout={setShowModalLogout} />}
 
           </div>
           <div className="more" >
