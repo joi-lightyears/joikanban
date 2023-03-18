@@ -32,23 +32,23 @@ function Login() {
   return (
     <div className="formContainer">
       <div className="formWrapper">
-      <span className="logo">NTDkanban</span>
-            <span className="title">Login</span>
-            <form onSubmit={handleSubmit}>
-                <div className='inputBox'>
-                    <input type="email" required="required"/>
-                    <span>email</span>
-                </div>
-                <div className='inputBox'>
-                    <input type="password" required="required"/>
-                    <span>password</span>
-                </div>
-                
-                <button disabled={loading}>Sign in</button>
-                
-                {err && <span>Something went wrong</span>}
-            </form>
-            <p>Not have an account yet? <Link to="/register">Register</Link></p>
+        <span className="logo">NTDkanban</span>
+        <span className="title">Login</span>
+        <form onSubmit={handleSubmit}>
+            <div className='inputBox'>
+                <span>email</span>
+                <input type="email" required="required"/>
+            </div>
+            <div className='inputBox'>
+                <span>password</span>
+                <input type="password" required="required"/>
+            </div>
+            
+            <button disabled={loading}>Sign in</button>
+            
+            {err && <span>Something went wrong</span>}
+        </form>
+        <p>Not have an account yet? <Link to="/register">Register</Link></p>
       </div>
     </div>
   )
