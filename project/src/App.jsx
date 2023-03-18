@@ -1,11 +1,12 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useContext } from 'react'
 import './Style.scss'
 import Header from './components/Header'
 import Sidebar from './components/Sidebar'
 import Board from './components/Board'
 import NoBoardFound from './components/NoBoardFound'
 import {userData} from './data/data'
-
+import { doc, getDoc, onSnapshot } from 'firebase/firestore';
+import { AuthContext } from './context/AuthContext'
 function App() {
   const [selectedBoardId, setSelectedBoardId] = useState(userData[0].boards.length>0?userData[0].boards[0].id:null);
   const [activeCollect, setActiveCollect] = useState(0); // active collection
@@ -13,6 +14,15 @@ function App() {
   const handleBoardClick = (boardId) => {
     setSelectedBoardId(boardId);
   };
+
+  const [boards, setBoards] = useState([])
+  const {currentUser} = useContext(AuthContext)
+  
+  const getData = async (user, setBoards) => {
+    const docRef = doc(db, "users", user);
+    const docSnap = await getDoc(docRef);
+    setBoards(docSnap.data().boards)
+  }
   // useEffect(() => {
   //   console.log(userData[0].boards)
   // }, [userData[0].boards]);
