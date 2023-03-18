@@ -52,27 +52,27 @@ function Register() {
   return (
     <div className="formContainer">
       <div className="formWrapper">
-      <span className="logo">NTDkanban</span>
-            <span className="title">Register</span>
-            <form onSubmit={handleSubmit}>
-                <div className='inputBox'>
-                    <input type="text" required="required"/>
-                    <span>username</span>
-                </div>
-                <div className='inputBox'>
-                    <input type="email" required="required"/>
-                    <span>email</span>
-                </div>
-                <div className='inputBox'>
-                    <input type="password" required="required"/>
-                    <span>password</span>
-                </div>
-                
-                <button disabled={loading}>Sign up</button>
-                
-                {err && <span>Something went wrong</span>}
-            </form>
-            <p>Already have an account? <Link to="/login">Login</Link></p>
+        <span className="logo">NTDkanban</span>
+        <span className="title">Register</span>
+        <form onSubmit={handleSubmit}>
+            <div className='inputBox'>
+                <span>username</span>
+                <input type="text" required="required"/>
+            </div>
+            <div className='inputBox'>
+                <span>email</span>
+                <input type="email" required="required"/>
+            </div>
+            <div className='inputBox'>
+                <span>password</span>
+                <input type="password" required="required"/>
+            </div>
+            
+            <button disabled={loading}>Sign up</button>
+            
+            {err && <span>Something went wrong</span>}
+        </form>
+        <p>Already have an account? <Link to="/login">Login</Link></p>
       </div>
     </div>
   )
