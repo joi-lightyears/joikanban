@@ -5,7 +5,8 @@ import { useContext } from 'react';
 import { AuthContext } from '../context/AuthContext';
 import { doc, setDoc } from "firebase/firestore";
 import { db } from "../firebase";
-
+import { updateProfile } from "firebase/auth";
+import { boards } from '../data/data';
 
 function Register() {
   const [loading, setLoading] = useState(false);
@@ -25,10 +26,16 @@ function Register() {
 
       const res = await signup(email, password)
       
+      await updateProfile(res.user, {
+        displayName,
+        email,
+      })
+
       await setDoc(doc(db, "users", res.user.uid), {
         uid: res.user.uid,
             displayName,
             email,
+            boards,
       }) 
       navigate("/")
 
