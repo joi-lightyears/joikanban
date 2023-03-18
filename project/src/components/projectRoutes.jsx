@@ -16,9 +16,9 @@ function ProjectRoutes() {
 
     <Routes location={location} key={location.pathname}>
         <Route path="/">
-        <Route index element={currentUser? <Home/>: <Navigate to='/login'/>}/>
-        <Route path="login" element={<Login/>}/>
-        <Route path="register" element={<Register/>}/>
+          <Route index element={currentUser? <Home/>: <Navigate to='/login'/>}/>
+          <Route path="login" element={<Login/>}/>
+          <Route path="register" element={<Register/>}/>
         </Route>
     </Routes>
   )

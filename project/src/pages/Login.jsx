@@ -32,7 +32,7 @@ function Login() {
   return (
     <div className="formContainer">
       <div className="formWrapper">
-      <span className="logo">NTDkanban</span>
+      <span className="logo">TDkanban</span>
             <span className="title">Login</span>
             <form onSubmit={handleSubmit}>
                 <div className='inputBox'>
