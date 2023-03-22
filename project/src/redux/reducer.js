@@ -5,7 +5,7 @@
 
 export const initialState ={
     id: 1,
-    boards: []
+    boards: null
 }
 
 const rootReducer = (state = initialState, action) => {
@@ -137,9 +137,10 @@ const rootReducer = (state = initialState, action) => {
                 const sourceColumn = board.columns.find(column => column.id === oldStatus);
                 const destinationColumn = board.columns.find(column => column.id === newStatus);
                 const itemToMove = sourceColumn.items.find(item => item.id === taskId);
+                const newStatusItemToMove = {...itemToMove, status: newStatus}
                 const newSourceItems = sourceColumn.items.filter(item => item.id !== taskId);
                 const newSourceColumn = { ...sourceColumn, items: newSourceItems };
-                const newDestinationColumn = { ...destinationColumn, items: [...destinationColumn.items, itemToMove] };
+                const newDestinationColumn = { ...destinationColumn, items: [...destinationColumn.items, newStatusItemToMove] };
                 const newColumns = board.columns.map(column => {
                     if (column.id === newSourceColumn.id) {
                         return newSourceColumn;
@@ -204,10 +205,11 @@ const rootReducer = (state = initialState, action) => {
                 const sourceColumn = board.columns.find(column => column.id === source.droppableId);
                 const destinationColumn = board.columns.find(column => column.id === destination.droppableId);
                 const itemToMove = sourceColumn.items.find(item => item.id === draggableId);
+                const newStatusItemToMove = {...itemToMove, status: destination.droppableId};
                 const newSourceItems = sourceColumn.items.filter(item => item.id !== draggableId);
                 const newSourceColumn = { ...sourceColumn, items: newSourceItems };
                 const newDestinationItems = [...destinationColumn.items]
-                newDestinationItems.splice(destination.index, 0, itemToMove);
+                newDestinationItems.splice(destination.index, 0, newStatusItemToMove);
                 const newDestinationColumn = { ...destinationColumn, items: newDestinationItems };
                 const newColumns = board.columns.map(column => {
                     if (column.id === newSourceColumn.id) {

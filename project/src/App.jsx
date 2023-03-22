@@ -20,31 +20,26 @@ import { boardsSelector } from './redux/selectors'
     setSelectedBoardId(boardId);
   };
 
-  const [boards, setBoards] = useState(null)
+  // const [boards, setBoards] = useState(null)
+  const boards = useSelector(boardsSelector)
   const {currentUser} =  useContext(AuthContext)
-
   const dispatch = useDispatch();
   
-
   useEffect(() => {
     const getBoards =()=>{
       const unsub = onSnapshot(doc(db, "users", currentUser.uid), (doc) => {
-        setBoards(doc.data().boards)
         getInitData(dispatch, currentUser, setSelectedBoardId)
-
-        
+        // setBoards(doc.data().boards)
       });
       return () =>{
         unsub();
       };
     }
-    currentUser.uid && getBoards()
-    
-    // currentUser.uid && setSelectedBoardId()
+    currentUser.uid && getBoards()    
   }, [currentUser.uid])
   
-  const userData = useSelector(boardsSelector)
-  console.log(userData)
+  // const userData = useSelector(boardsSelector)
+  // console.log(userData)
   
   if(boards === null)
   {
