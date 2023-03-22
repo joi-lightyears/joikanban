@@ -1,0 +1,1 @@
+export const boardsSelector = (state) => state.boards;

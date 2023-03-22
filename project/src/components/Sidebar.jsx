@@ -1,9 +1,12 @@
 import React, { useRef, useState, useEffect } from 'react'
 import {BiDockRight, BiPlusMedical} from 'react-icons/bi'
 import ModalAddBoard from './ModalAddBoard';
+import {useDispatch, useSelector} from 'react-redux';
+import { boardsSelector } from '../redux/selectors';
 
+function Sidebar({activeCollect, setActiveCollect, setSelectedBoardId, onBoardClick }) {
+    const boards = useSelector(boardsSelector)
 
-function Sidebar({activeCollect, setActiveCollect, setSelectedBoardId, boards, onBoardClick }) {
     const listCollection = useRef([])
     const [showModalAddBoard, setShowModalAddBoard] = useState(false)
     const handleClick = (index) => {

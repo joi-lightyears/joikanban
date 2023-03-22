@@ -241,11 +241,11 @@ p.by a{
             text-align: center;
             opacity: 0.8;
             a{
-                color:  #6599f6;
+                color:  #935ef1;
                 text-decoration: none;
                 transition: 0.3s ease-out;
                 &:hover{
-                    color: #945ff1;
+                    opacity: 0.5;
                 }
             }
         }
