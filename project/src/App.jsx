@@ -4,33 +4,57 @@ import Header from './components/Header'
 import Sidebar from './components/Sidebar'
 import Board from './components/Board'
 import NoBoardFound from './components/NoBoardFound'
-import {userData} from './data/data'
+// import {userData} from './data/data'
 import { doc, getDoc, onSnapshot } from 'firebase/firestore';
 import { AuthContext } from './context/AuthContext'
-function App() {
-  const [selectedBoardId, setSelectedBoardId] = useState(userData[0].boards.length>0?userData[0].boards[0].id:null);
+import { db } from './firebase';
+import getInitData from './redux/getInitData'
+import {useDispatch, useSelector} from 'react-redux';
+import { boardsSelector } from './redux/selectors'
+
+ function App() {
+  const [selectedBoardId, setSelectedBoardId] = useState(null);
   const [activeCollect, setActiveCollect] = useState(0); // active collection
   const [fakeState, setFakeState] = useState(true); // fake state to re-render the app
   const handleBoardClick = (boardId) => {
     setSelectedBoardId(boardId);
   };
 
-  const [boards, setBoards] = useState([])
-  const {currentUser} = useContext(AuthContext)
+  const [boards, setBoards] = useState(null)
+  const {currentUser} =  useContext(AuthContext)
+
+  const dispatch = useDispatch();
   
-  const getData = async (user, setBoards) => {
-    const docRef = doc(db, "users", user);
-    const docSnap = await getDoc(docRef);
-    setBoards(docSnap.data().boards)
+
+  useEffect(() => {
+    const getBoards =()=>{
+      const unsub = onSnapshot(doc(db, "users", currentUser.uid), (doc) => {
+        setBoards(doc.data().boards)
+        getInitData(dispatch, currentUser, setSelectedBoardId)
+
+        
+      });
+      return () =>{
+        unsub();
+      };
+    }
+    currentUser.uid && getBoards()
+    
+    // currentUser.uid && setSelectedBoardId()
+  }, [currentUser.uid])
+  
+  const userData = useSelector(boardsSelector)
+  console.log(userData)
+  
+  if(boards === null)
+  {
+    return <div>Loading...</div>
   }
-  // useEffect(() => {
-  //   console.log(userData[0].boards)
-  // }, [userData[0].boards]);
   return (
     <div className="App">
-      <Header setFakeState={setFakeState} selectedBoardId={selectedBoardId} setActiveCollect={setActiveCollect} setSelectedBoardId={setSelectedBoardId} boards={userData[0].boards} />
-      <Sidebar activeCollect={activeCollect} setActiveCollect={setActiveCollect} setSelectedBoardId={setSelectedBoardId} boards={userData[0].boards} onBoardClick={handleBoardClick}/>
-      {selectedBoardId ? <Board key={selectedBoardId} board={userData[0].boards.find((board) => board.id === selectedBoardId)}/> : <NoBoardFound setSelectedBoardId={setSelectedBoardId} setActiveCollect={setActiveCollect} boards={userData[0].boards}/>}
+      <Header setFakeState={setFakeState} selectedBoardId={selectedBoardId} setActiveCollect={setActiveCollect} setSelectedBoardId={setSelectedBoardId} />
+      <Sidebar activeCollect={activeCollect} setActiveCollect={setActiveCollect} setSelectedBoardId={setSelectedBoardId} onBoardClick={handleBoardClick}/>
+      {selectedBoardId ? <Board key={selectedBoardId} currentUser={currentUser} selectedBoardId={selectedBoardId}/> : <NoBoardFound setSelectedBoardId={setSelectedBoardId} setActiveCollect={setActiveCollect} boards={boards}/>}
     </div>
   )
 }

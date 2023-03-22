@@ -6,72 +6,27 @@ import ModalInfoTask from './ModalInfoTask';
 import ModalEdit from './ModalEdit';
 import ModalDelete from './ModalDelete';
 import { v4 as uid } from 'uuid';
+import {useDispatch, useSelector} from 'react-redux';
+import { boardsSelector } from '../redux/selectors';
+import { addItem, deleteItem, editItem, optionChange, onMove } from '../redux/actions';
+import { updateData } from '../redux/updateData';
 
-function Board({board}) {
-    
-    const [columns, setColumns] = useState(board.columns);
+function Board({selectedBoardId, currentUser}) {
+    const boards = useSelector(boardsSelector)
+    const board = boards.find((board) => board.id === selectedBoardId)
+    const dispatch = useDispatch();
+
+    // const [columns, setColumns] = useState(board.columns);
     const [showModal, setShowModal] = useState(false);
     const [showModalInfo, setShowModalInfo] = useState(false);
     const [showModalEdit, setShowModalEdit] = useState(false);
     const [showModalDelete, setShowModalDelete] = useState(false);
     const [selectedColumn, setSelectedColumn] = useState({});
     const [selectedTask, setSelectedTask] = useState({});
-    // useEffect(() => {
-    //     setColumns(board.columns);
-    // }, [board]);
-    // console.log(board.columns)
-    // console.log(columns);
     function onDragEnd(result) {
         const { source, destination, draggableId } = result;
-        // console.log(result);
-        // If the draggable item was dropped outside of any droppable area, exit early
-        if (!destination) {
-            return;
-        }
-
-        // If the draggable item was dropped in the same column, exit if in the same index
-        // reorder if in different index
-        if (destination.droppableId === source.droppableId ) {
-            if(destination.index === source.index){
-                return;
-            }else{
-                const column = columns.find((column) => column.id === source.droppableId);
-                const newItems = [...column.items];
-                const [removed] = newItems.splice(source.index, 1);
-                newItems.splice(destination.index, 0, removed);
-                const newColumns = [...columns];
-                newColumns.find((column) => column.id === source.droppableId).items = newItems;
-                setColumns(newColumns);
-                return;
-            }
-        }
-
-
-        // Find the column corresponding to the source droppable area
-        const sourceColumn = columns.find((column) => column.id === source.droppableId);
-
-        // Find the item that was dragged
-        const draggedItem = sourceColumn.items.find((item) => item.id === draggableId);
-        // console.log(draggedItem)
-        //update status of that task when dragged
-        draggedItem.status = destination.droppableId;
-
-        // Remove the item from the source column
-        const newSourceItems = [...sourceColumn.items];
-        newSourceItems.splice(source.index, 1);
-
-        // Find the column corresponding to the destination droppable area
-        const destinationColumn = columns.find((column) => column.id === destination.droppableId);
-
-        // Add the item to the destination column
-        const newDestinationItems = [...destinationColumn.items];
-        newDestinationItems.splice(destination.index, 0, draggedItem);
-
-        // Update the state with the new positions of the items in the columns
-        const newColumns = [...columns];
-        newColumns.find((column) => column.id === source.droppableId).items = newSourceItems;
-        newColumns.find((column) => column.id === destination.droppableId).items = newDestinationItems;
-        setColumns(newColumns);
+        const boardId = board.id;
+        dispatch(onMove(boardId, source, destination, draggableId));
     }
 
 
@@ -110,42 +65,29 @@ function Board({board}) {
 
 
     const handleSelectOptionChange = (oldStatus, newStatus, taskId) => {
-        const indexOldTask = columns.find((column) => column.id === oldStatus).items.findIndex((item) => item.id === taskId);
-        const lengthNewTask = columns.find((column) => column.id === newStatus).items.length;
-        const tempResult = {
-            destination: {
-                droppableId: newStatus,
-                index: lengthNewTask,
-            },
-            draggableId: taskId,
-            source: {
-                droppableId: oldStatus,
-                index: indexOldTask,
-            }
-        }
-        onDragEnd(tempResult);
+        const boardId = board.id;
+        dispatch(optionChange(boardId, oldStatus, newStatus, taskId))
     }
 
+    useEffect(() => {
+        // setColumns(board.columns);
+        updateData(boards, currentUser);
+      }, [boards, currentUser]);
     const handleSubmit = (e) => {
         e.preventDefault()
-        // console.log(e);
         const title = e.target.title.value;
         const description = e.target.description.value;
         const status = e.target.status.value;
-        // console.log(title, description, status);
-
-
-        const newColumns = [...columns];
-        const newItems = [...newColumns.find((column) => column.id === status).items];
-        newItems.push({
+        const newItem = {
             id: uid(),
             title: title,
             description: description,
             status: status
-        });
-        // console.log(newItems);
-        newColumns.find((column) => column.id === status).items = newItems;
-        setColumns(newColumns);
+        }
+        const boardId = board.id;
+        const columnId = status;
+        console.log(boardId, columnId, newItem)
+        dispatch(addItem(boardId, columnId, newItem))
         setShowModal(false);
 
     };
@@ -156,46 +98,22 @@ function Board({board}) {
         const title = e.target.title.value;
         const description = e.target.description.value;
         const status = e.target.status.value;
-        const indexOldTask = columns.find((column) => column.id === selectedTask.status).items.findIndex((item) => item.id === selectedTask.id);
 
-        selectedTask.title = title;
-        selectedTask.description = description;
-
-        // console.log(e);
-
-        // const newColumns = [...columns];
-
-        if(selectedTask.status !== status){
-            const lengthNewTask = columns.find((column) => column.id === status).items.length;
-            const tempResult = {
-                destination: {
-                    droppableId: status,
-                    index: lengthNewTask,
-                },
-                draggableId: selectedTask.id,
-                source: {
-                    droppableId: selectedTask.status,
-                    index: indexOldTask,
-                }
-            }
-            onDragEnd(tempResult);
-        }else{
-            const newItems = [...columns.find((column) => column.id === selectedTask.status).items];
-            newItems[indexOldTask] = selectedTask;
-            const newColumns = [...columns];
-            newColumns.find((column) => column.id === selectedTask.status).items = newItems;
-            setColumns(newColumns);
+        const boardId = board.id;
+        const itemId = selectedTask.id;
+        const updatedItem = {
+            id: selectedTask.id,
+            title: title,
+            description: description,
+            status: status
         }
-        
-
+        dispatch(editItem(boardId, itemId, selectedTask, updatedItem))
     }
     const handleDelete = () => {
-        const indexOldTask = columns.find((column) => column.id === selectedTask.status).items.findIndex((item) => item.id === selectedTask.id);
-        const newItems = [...columns.find((column) => column.id === selectedTask.status).items];
-        newItems.splice(indexOldTask, 1);
-        const newColumns = [...columns];
-        newColumns.find((column) => column.id === selectedTask.status).items = newItems;
-        setColumns(newColumns);
+        const boardId = board.id;
+        const columnId = selectedTask.status;
+        const itemId = selectedTask.id;
+        dispatch(deleteItem(boardId, columnId, itemId));
         setShowModalDelete(false);
     }
 
@@ -203,7 +121,7 @@ function Board({board}) {
     <div className="board-container">
         <DragDropContext onDragEnd={onDragEnd}>
             <div className="columns">
-                {columns.map((column) => (
+                {board.columns.map((column) => (
                 <Droppable key={column.id} droppableId={column.id}>
                     {(provided, snapshot) => (
 
@@ -211,9 +129,9 @@ function Board({board}) {
                         className="column"
                         {...provided.droppableProps}
                         ref={provided.innerRef}
-                        style={{
-                        // background: snapshot.isDraggingOver ? 'lightblue' : 'lightgrey'
-                        }}
+                        // style={{
+                        //  background: snapshot.isDraggingOver ? 'lightblue' : 'lightgrey'
+                        // }}
                     >
 
                         <h2

@@ -5,16 +5,18 @@ import ModalEditBoard from './ModalEditBoard';
 import ModalDeleteBoard from './ModalDeleteBoard'
 import ModalEditDetailBoard from './ModalEditDetailBoard';
 import ModalLogout from './ModalLogout';
+import {useDispatch, useSelector} from 'react-redux';
+import { boardsSelector } from '../redux/selectors';
 
 
-function Header({setFakeState, selectedBoardId, setActiveCollect, setSelectedBoardId, boards}) {
+function Header({setFakeState, selectedBoardId, setActiveCollect, setSelectedBoardId}) {
+  const boards = useSelector(boardsSelector)
   const [isChecked, setIsChecked] = useState(true);
   const [showModalEditBoard, setShowModalEditBoard] = useState(false);
   const [showModalDeleteBoard, setShowModalDeleteBoard] = useState(false);
   const [showModalEditDetailBoard, setShowModalEditDetailBoard] = useState(false);
   const [showModalLogout, setShowModalLogout] = useState(false);
   const board = boards.find((board) => board.id === selectedBoardId);
-
 
   return (
     <div className="header-container">
