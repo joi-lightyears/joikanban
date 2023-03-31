@@ -1,13 +1,23 @@
-import React from 'react'
+import React, {useEffect} from 'react'
 import { v4 as uid } from 'uuid';
+import {useDispatch, useSelector} from 'react-redux';
+import { boardsSelector } from '../redux/selectors'
+import { addBoard, setActiveCollect, selectBoard } from '../redux/actions'
+import { updateData } from '../redux/updateData'
 
+function ModalAddBoard({currentUser, setShowModalAddBoard, setActiveCollect}) {
+    const dispatch = useDispatch();
+    const boards = useSelector(boardsSelector)
 
-function ModalAddBoard({setSelectedBoardId, setActiveCollect, boards, setShowModalAddBoard}) {
     const handleCloseOutside = (e) => {
         e.stopPropagation();
     }
+    // useEffect(() => { 
+    //     updateData(boards, currentUser);
+    //   }, [boards, currentUser]);
     const handleAddBoard = (e) => {
         e.preventDefault();
+        // dispatch(setActiveCollect(boards.length));
         setActiveCollect(boards.length);
         
         const newBoard = {
@@ -36,9 +46,8 @@ function ModalAddBoard({setSelectedBoardId, setActiveCollect, boards, setShowMod
                 }
             ]
         }
-        boards.push(newBoard);
-        setSelectedBoardId(newBoard.id);
-        // console.log(boards);
+        dispatch(addBoard(newBoard))
+        dispatch(selectBoard(newBoard.id))
         setShowModalAddBoard(false);
     }
   return (
