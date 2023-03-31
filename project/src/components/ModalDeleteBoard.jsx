@@ -8,8 +8,11 @@ function ModalDeleteBoard({setActiveCollect, setShowModalDeleteBoard}) {
     const boards = useSelector(boardsSelector);
     const selectedBoardId = useSelector(selectedBoardIdSelector)
     const handleDelete = () => {
+        
+        
         dispatch(deleteBoard(selectedBoardId));
-        dispatch(selectBoard(boards.length>0? boards[0].id : null));
+        const remainingBoards = boards.filter(board => board.id !== selectedBoardId);
+        dispatch(selectBoard(remainingBoards.length > 0 ? remainingBoards[0].id : null));
         setShowModalDeleteBoard(false);
         setActiveCollect(0);
     }
