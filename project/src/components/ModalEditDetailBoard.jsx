@@ -1,6 +1,12 @@
 import React, {useState} from 'react'
+import {useDispatch, useSelector} from 'react-redux';
+import { boardsSelector, selectedBoardIdSelector } from '../redux/selectors';
+import { selectBoard, editBoard } from '../redux/actions';
 
-function ModalEditDetailBoard({setFakeState, setShowModalEditDetailBoard, selectedBoardId, boards}) {
+function ModalEditDetailBoard({setShowModalEditDetailBoard}) {
+  const dispatch = useDispatch();
+  const boards = useSelector(boardsSelector);
+  const selectedBoardId = useSelector(selectedBoardIdSelector)
   const board = boards.find((board) => board.id === selectedBoardId);
   const [name, setName] = useState(board.title);
   const handleCloseOutside = (e) => {
@@ -8,10 +14,8 @@ function ModalEditDetailBoard({setFakeState, setShowModalEditDetailBoard, select
 }
   const handleEditBoard = (e) => {
     e.preventDefault();
-    boards.find((board) => board.id === selectedBoardId).title = e.target.name.value;
+    dispatch(editBoard(selectedBoardId, name));
     setShowModalEditDetailBoard(false)
-    setFakeState(prev => !prev);
-    // console.log(boards);
   }
   return (
     <div className="modal-container" onClick={()=>setShowModalEditDetailBoard(false)}>

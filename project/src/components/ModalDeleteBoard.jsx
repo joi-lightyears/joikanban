@@ -1,17 +1,17 @@
 import React from 'react'
+import {useDispatch, useSelector} from 'react-redux';
+import { boardsSelector, selectedBoardIdSelector } from '../redux/selectors';
+import { deleteBoard, selectBoard } from '../redux/actions';
 
-function ModalDeleteBoard({setFakeState, selectedBoardId, setActiveCollect, setSelectedBoardId, setShowModalDeleteBoard, boards}) {
+function ModalDeleteBoard({setActiveCollect, setShowModalDeleteBoard}) {
+    const dispatch = useDispatch();
+    const boards = useSelector(boardsSelector);
+    const selectedBoardId = useSelector(selectedBoardIdSelector)
     const handleDelete = () => {
+        dispatch(deleteBoard(selectedBoardId));
+        dispatch(selectBoard(boards.length>0? boards[0].id : null));
         setShowModalDeleteBoard(false);
-        const index = boards.findIndex((b) => b.id === selectedBoardId);
-        boards.splice(index, 1);
-        
-        
-        setSelectedBoardId(boards.length>0? boards[0].id : null);
         setActiveCollect(0);
-        setFakeState(prev => !prev);
-        
-        // console.log(boards);
     }
     
   return (

@@ -7,14 +7,16 @@ import ModalEdit from './ModalEdit';
 import ModalDelete from './ModalDelete';
 import { v4 as uid } from 'uuid';
 import {useDispatch, useSelector} from 'react-redux';
-import { boardsSelector } from '../redux/selectors';
+import { boardsSelector, selectedBoardIdSelector } from '../redux/selectors';
 import { addItem, deleteItem, editItem, optionChange, onMove } from '../redux/actions';
 import { updateData } from '../redux/updateData';
 
-function Board({selectedBoardId, currentUser}) {
+function Board({currentUser}) {
     const boards = useSelector(boardsSelector)
+    const selectedBoardId = useSelector(selectedBoardIdSelector)
     const board = boards.find((board) => board.id === selectedBoardId)
     const dispatch = useDispatch();
+    console.log(2)
 
     // const [columns, setColumns] = useState(board.columns);
     const [showModal, setShowModal] = useState(false);
@@ -69,8 +71,7 @@ function Board({selectedBoardId, currentUser}) {
         dispatch(optionChange(boardId, oldStatus, newStatus, taskId))
     }
 
-    useEffect(() => {
-        // setColumns(board.columns);
+    useEffect(() => { 
         updateData(boards, currentUser);
       }, [boards, currentUser]);
     const handleSubmit = (e) => {

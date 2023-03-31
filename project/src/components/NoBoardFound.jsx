@@ -2,7 +2,8 @@ import React,{useState} from 'react'
 import {BiPlusMedical} from 'react-icons/bi'
 import ModalAddBoard from './ModalAddBoard';
 
-function NoBoardFound({setSelectedBoardId, setActiveCollect, boards}) {
+function NoBoardFound() {
+
   const [showModalAddBoard, setShowModalAddBoard] = useState(false)
   
   return (
@@ -13,7 +14,7 @@ function NoBoardFound({setSelectedBoardId, setActiveCollect, boards}) {
           <BiPlusMedical/> Create New Board
         </div>
       </div>
-      {showModalAddBoard && <ModalAddBoard setSelectedBoardId={setSelectedBoardId} setActiveCollect={setActiveCollect} boards={boards} setShowModalAddBoard={setShowModalAddBoard}/>}
+      {showModalAddBoard && <ModalAddBoard setShowModalAddBoard={setShowModalAddBoard}/>}
     </div>
   )
 }

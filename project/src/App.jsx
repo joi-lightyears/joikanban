@@ -5,51 +5,44 @@ import Sidebar from './components/Sidebar'
 import Board from './components/Board'
 import NoBoardFound from './components/NoBoardFound'
 // import {userData} from './data/data'
-import { doc, getDoc, onSnapshot } from 'firebase/firestore';
+import { doc, onSnapshot } from 'firebase/firestore';
 import { AuthContext } from './context/AuthContext'
 import { db } from './firebase';
 import getInitData from './redux/getInitData'
 import {useDispatch, useSelector} from 'react-redux';
-import { boardsSelector } from './redux/selectors'
+import { boardsSelector, selectedBoardIdSelector, activeCollectSelector } from './redux/selectors'
+import { selectBoard } from './redux/actions'
 
  function App() {
-  const [selectedBoardId, setSelectedBoardId] = useState(null);
-  const [activeCollect, setActiveCollect] = useState(0); // active collection
-  const [fakeState, setFakeState] = useState(true); // fake state to re-render the app
-  const handleBoardClick = (boardId) => {
-    setSelectedBoardId(boardId);
-  };
-
-  // const [boards, setBoards] = useState(null)
-  const boards = useSelector(boardsSelector)
   const {currentUser} =  useContext(AuthContext)
+  const [activeCollect, setActiveCollect] = useState(0)
+  const boards = useSelector(boardsSelector)
+  console.log(boards)
+  const selectedBoardId = useSelector(selectedBoardIdSelector)
   const dispatch = useDispatch();
   
   useEffect(() => {
     const getBoards =()=>{
       const unsub = onSnapshot(doc(db, "users", currentUser.uid), (doc) => {
-        getInitData(dispatch, currentUser, setSelectedBoardId)
-        // setBoards(doc.data().boards)
+        getInitData(dispatch, currentUser)
       });
       return () =>{
         unsub();
       };
     }
-    currentUser.uid && getBoards()    
+  currentUser.uid && getBoards()
   }, [currentUser.uid])
   
-  // const userData = useSelector(boardsSelector)
-  // console.log(userData)
-  
-  if(boards === null)
+  if(!boards)
   {
     return <div>Loading...</div>
   }
+    
   return (
     <div className="App">
-      <Header setFakeState={setFakeState} selectedBoardId={selectedBoardId} setActiveCollect={setActiveCollect} setSelectedBoardId={setSelectedBoardId} />
-      <Sidebar activeCollect={activeCollect} setActiveCollect={setActiveCollect} setSelectedBoardId={setSelectedBoardId} onBoardClick={handleBoardClick}/>
-      {selectedBoardId ? <Board key={selectedBoardId} currentUser={currentUser} selectedBoardId={selectedBoardId}/> : <NoBoardFound setSelectedBoardId={setSelectedBoardId} setActiveCollect={setActiveCollect} boards={boards}/>}
+      <Header currentUser={currentUser} setActiveCollect={setActiveCollect}/>
+      <Sidebar currentUser={currentUser} activeCollect={activeCollect} setActiveCollect={setActiveCollect}/>
+      {selectedBoardId ? <Board  currentUser={currentUser} /> : <NoBoardFound/>}
     </div>
   )
 }

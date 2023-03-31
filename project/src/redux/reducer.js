@@ -5,17 +5,37 @@
 
 export const initialState ={
     id: 1,
+    selectedBoardId: null,
+    // activeCollect: 0,
     boards: null
 }
 
 const rootReducer = (state = initialState, action) => {
     switch (action.type) {
         case 'SET_INIT_DATA':
-            // console.log(action.payload)
+            {const {boards, selectedBoardId} = action.payload;
+            console.log('reducer')
             return {
                 ...state,
-                boards: action.payload
+                selectedBoardId,
+                boards,
+            }}
+        case 'UPDATE_SELECTED_BOARD_ID':
+            {
+                const { selectedBoardId } = action.payload;
+                return {
+                    ...state,
+                    selectedBoardId,
+                };
             }
+        // case 'ACTIVE_COLLECT':
+        //     {
+        //         const { activeCollect } = action.payload;
+        //         return {
+        //             ...state,
+        //             activeCollect,
+        //         };
+        //     }
         case 'ADD_ITEM':
             {
                 const { boardId, columnId, newItem } = action.payload;
@@ -132,6 +152,7 @@ const rootReducer = (state = initialState, action) => {
             }
             case 'OPTION_CHANGE':
             {
+                // console.log(action.payload)
                 const {boardId, oldStatus, newStatus, taskId} = action.payload;
                 const board = state.boards.find(board => board.id === boardId);
                 const sourceColumn = board.columns.find(column => column.id === oldStatus);
@@ -157,6 +178,7 @@ const rootReducer = (state = initialState, action) => {
                 const newBoards = [...state.boards];
                 const boardIndex = newBoards.findIndex(board => board.id === boardId);
                 newBoards[boardIndex] = newBoard;
+                console.log(newBoards)
                 return {
                     ...state,
                     boards: newBoards
@@ -232,6 +254,40 @@ const rootReducer = (state = initialState, action) => {
                     boards: newBoards
                 };
                
+            }
+            case 'ADD_BOARD':
+            {
+                const {newBoard} = action.payload;
+                return {
+                    ...state,
+                    boards: [...state.boards, newBoard]
+                };
+            }
+            case 'DELETE_BOARD':
+            {
+                const {boardId} = action.payload;
+                const tempBoards = state.boards.filter(board => board.id !== boardId);
+                const newBoards = [...tempBoards];
+                return {
+                    ...state,
+                    boards: newBoards
+                };
+            }
+            case 'EDIT_BOARD':
+            {
+                const {boardId, newTitle} = action.payload;
+                const board = state.boards.find(board => board.id === boardId);
+                const newBoard = {
+                    ...board,
+                    title: newTitle
+                };
+                const newBoards = [...state.boards];
+                const boardIndex = newBoards.findIndex(board => board.id === boardId);
+                newBoards[boardIndex] = newBoard;
+                return {
+                    ...state,
+                    boards: newBoards
+                };
             }
         
         default:

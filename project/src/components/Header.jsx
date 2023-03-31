@@ -6,11 +6,12 @@ import ModalDeleteBoard from './ModalDeleteBoard'
 import ModalEditDetailBoard from './ModalEditDetailBoard';
 import ModalLogout from './ModalLogout';
 import {useDispatch, useSelector} from 'react-redux';
-import { boardsSelector } from '../redux/selectors';
+import { boardsSelector, selectedBoardIdSelector } from '../redux/selectors';
 
 
-function Header({setFakeState, selectedBoardId, setActiveCollect, setSelectedBoardId}) {
+function Header({ setActiveCollect}) {
   const boards = useSelector(boardsSelector)
+  const selectedBoardId = useSelector(selectedBoardIdSelector)
   const [isChecked, setIsChecked] = useState(true);
   const [showModalEditBoard, setShowModalEditBoard] = useState(false);
   const [showModalDeleteBoard, setShowModalDeleteBoard] = useState(false);
@@ -44,8 +45,8 @@ function Header({setFakeState, selectedBoardId, setActiveCollect, setSelectedBoa
           <div className="more" >
               <BiDotsVerticalRounded onClick={()=>setShowModalEditBoard(!showModalEditBoard)} className='more-icon'/>
               {showModalEditBoard && <ModalEditBoard boards={boards} setShowModalEditDetailBoard={setShowModalEditDetailBoard} setShowModalDeleteBoard={setShowModalDeleteBoard} setShowModalEditBoard={setShowModalEditBoard} />}
-              {showModalDeleteBoard && <ModalDeleteBoard setFakeState={setFakeState} selectedBoardId={selectedBoardId} setActiveCollect={setActiveCollect} setSelectedBoardId={setSelectedBoardId} setShowModalDeleteBoard={setShowModalDeleteBoard} boards={boards} />}
-              {showModalEditDetailBoard && <ModalEditDetailBoard setFakeState={setFakeState} setShowModalEditDetailBoard={setShowModalEditDetailBoard} selectedBoardId={selectedBoardId} boards={boards}/>}
+              {showModalDeleteBoard && <ModalDeleteBoard setActiveCollect={setActiveCollect} setShowModalDeleteBoard={setShowModalDeleteBoard} />}
+              {showModalEditDetailBoard && <ModalEditDetailBoard  setShowModalEditDetailBoard={setShowModalEditDetailBoard} selectedBoardId={selectedBoardId} boards={boards}/>}
           </div>
         </div>    
     </div>
