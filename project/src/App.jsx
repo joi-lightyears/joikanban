@@ -23,9 +23,9 @@ import { selectBoard } from './redux/actions'
   
   useEffect(() => {
     const getBoards =()=>{
-      const unsub = onSnapshot(doc(db, "users", currentUser.uid), (doc) => {
+      // const unsub = onSnapshot(doc(db, "users", currentUser.uid), (doc) => {
         getInitData(dispatch, currentUser)
-      });
+      // });
       return () =>{
         unsub();
       };
