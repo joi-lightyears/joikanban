@@ -37,12 +37,12 @@ import { selectBoard } from './redux/actions'
   {
     return <div>Loading...</div>
   }
-    
+  
   return (
     <div className="App">
       <Header currentUser={currentUser} setActiveCollect={setActiveCollect}/>
       <Sidebar currentUser={currentUser} activeCollect={activeCollect} setActiveCollect={setActiveCollect}/>
-      {selectedBoardId ? <Board  currentUser={currentUser} /> : <NoBoardFound/>}
+      {selectedBoardId ? <Board  currentUser={currentUser} /> : <NoBoardFound currentUser={currentUser} setActiveCollect={setActiveCollect}/>}
     </div>
   )
 }

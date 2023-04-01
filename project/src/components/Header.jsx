@@ -9,7 +9,7 @@ import {useDispatch, useSelector} from 'react-redux';
 import { boardsSelector, selectedBoardIdSelector } from '../redux/selectors';
 
 
-function Header({ setActiveCollect}) {
+function Header({currentUser, setActiveCollect}) {
   const boards = useSelector(boardsSelector)
   const selectedBoardId = useSelector(selectedBoardIdSelector)
   const [isChecked, setIsChecked] = useState(true);
@@ -45,7 +45,7 @@ function Header({ setActiveCollect}) {
           <div className="more" >
               <BiDotsVerticalRounded onClick={()=>setShowModalEditBoard(!showModalEditBoard)} className='more-icon'/>
               {showModalEditBoard && <ModalEditBoard boards={boards} setShowModalEditDetailBoard={setShowModalEditDetailBoard} setShowModalDeleteBoard={setShowModalDeleteBoard} setShowModalEditBoard={setShowModalEditBoard} />}
-              {showModalDeleteBoard && <ModalDeleteBoard setActiveCollect={setActiveCollect} setShowModalDeleteBoard={setShowModalDeleteBoard} />}
+              {showModalDeleteBoard && <ModalDeleteBoard currentUser={currentUser} setActiveCollect={setActiveCollect} setShowModalDeleteBoard={setShowModalDeleteBoard} />}
               {showModalEditDetailBoard && <ModalEditDetailBoard  setShowModalEditDetailBoard={setShowModalEditDetailBoard} selectedBoardId={selectedBoardId} boards={boards}/>}
           </div>
         </div>    

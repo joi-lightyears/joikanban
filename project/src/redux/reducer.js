@@ -265,6 +265,7 @@ const rootReducer = (state = initialState, action) => {
             }
             case 'DELETE_BOARD':
             {
+                console.log('delete board')
                 const {boardId} = action.payload;
                 const tempBoards = state.boards.filter(board => board.id !== boardId);
                 const newBoards = [...tempBoards];
