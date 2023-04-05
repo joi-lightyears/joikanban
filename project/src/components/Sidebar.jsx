@@ -5,7 +5,7 @@ import {useDispatch, useSelector} from 'react-redux';
 import { boardsSelector, activeCollectSelector } from '../redux/selectors';
 import { setActiveCollect, selectBoard } from '../redux/actions';
 
-function Sidebar({currentUser, setActiveCollect, activeCollect }) {
+function Sidebar({isDarkMode, currentUser, setActiveCollect, activeCollect }) {
     const boards = useSelector(boardsSelector)
     const dispatch = useDispatch();
     // const activeCollect = useSelector(activeCollectSelector)
@@ -20,7 +20,7 @@ function Sidebar({currentUser, setActiveCollect, activeCollect }) {
 
 
   return (
-    <div className="sidebar-container">
+    <div className={`sidebar-container ${isDarkMode? '': 'light-mode'}`}>
         <div className="logo">NTDkanban</div>
         <div className="bottom">
         <div className="bottom-wrapper">
