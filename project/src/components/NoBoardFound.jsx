@@ -11,9 +11,9 @@ function NoBoardFound({currentUser, setActiveCollect}) {
   const [showModalAddBoard, setShowModalAddBoard] = useState(false)
   const boards = useSelector(boardsSelector);
 
-  useEffect(() => { 
-    updateData(boards, currentUser);
-  }, [boards, currentUser]);
+  // useEffect(() => { 
+  //   updateData(boards, currentUser);
+  // }, [boards, currentUser]);
   return (
     <div className="no-board-found">
       <div className="container">

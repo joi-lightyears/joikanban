@@ -14,7 +14,7 @@ const rootReducer = (state = initialState, action) => {
     switch (action.type) {
         case 'SET_INIT_DATA':
             {const {boards, selectedBoardId} = action.payload;
-            console.log('reducer')
+            // console.log('reducer')
             return {
                 ...state,
                 selectedBoardId,
@@ -178,7 +178,7 @@ const rootReducer = (state = initialState, action) => {
                 const newBoards = [...state.boards];
                 const boardIndex = newBoards.findIndex(board => board.id === boardId);
                 newBoards[boardIndex] = newBoard;
-                console.log(newBoards)
+                // console.log(newBoards)
                 return {
                     ...state,
                     boards: newBoards
@@ -265,7 +265,7 @@ const rootReducer = (state = initialState, action) => {
             }
             case 'DELETE_BOARD':
             {
-                console.log('delete board')
+                // console.log('delete board')
                 const {boardId} = action.payload;
                 const tempBoards = state.boards.filter(board => board.id !== boardId);
                 const newBoards = [...tempBoards];

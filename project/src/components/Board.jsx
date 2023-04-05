@@ -11,12 +11,12 @@ import { boardsSelector, selectedBoardIdSelector } from '../redux/selectors';
 import { addItem, deleteItem, editItem, optionChange, onMove } from '../redux/actions';
 import { updateData } from '../redux/updateData';
 
-function Board({currentUser}) {
+function Board({isDarkMode}) {
     const boards = useSelector(boardsSelector)
     const selectedBoardId = useSelector(selectedBoardIdSelector)
     const board = boards.find((board) => board.id === selectedBoardId)
     const dispatch = useDispatch();
-    console.log(2)
+    // console.log(2)
 
     // const [columns, setColumns] = useState(board.columns);
     const [showModal, setShowModal] = useState(false);
@@ -71,9 +71,9 @@ function Board({currentUser}) {
         dispatch(optionChange(boardId, oldStatus, newStatus, taskId))
     }
 
-    useEffect(() => { 
-        updateData(boards, currentUser);
-      }, [boards, currentUser]);
+    // useEffect(() => { 
+    //     updateData(boards, currentUser);
+    //   }, [boards, currentUser]);
     const handleSubmit = (e) => {
         e.preventDefault()
         const title = e.target.title.value;
@@ -87,7 +87,7 @@ function Board({currentUser}) {
         }
         const boardId = board.id;
         const columnId = status;
-        console.log(boardId, columnId, newItem)
+        // console.log(boardId, columnId, newItem)
         dispatch(addItem(boardId, columnId, newItem))
         setShowModal(false);
 
@@ -153,7 +153,7 @@ function Board({currentUser}) {
                                     {...provided.dragHandleProps}
                                     ref={provided.innerRef}
                                     style={{
-                                    backgroundColor: snapshot.isDragging ? 'rgba(43, 45, 49, 0.5)' : 'rgba(43, 45, 49, 1)',
+                                    backgroundColor: isDarkMode? snapshot.isDragging ? 'rgba(43, 45, 49, 0.5)' : 'rgba(43, 45, 49, 1)': snapshot.isDragging ? 'rgba(211, 211, 211, 0.5)' : 'rgba(211, 211, 211, 1)', 
                                     ...provided.draggableProps.style
                                     }}
                                 >

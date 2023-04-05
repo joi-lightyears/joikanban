@@ -9,7 +9,7 @@ import {useDispatch, useSelector} from 'react-redux';
 import { boardsSelector, selectedBoardIdSelector } from '../redux/selectors';
 
 
-function Header({currentUser, setActiveCollect}) {
+function Header({isDarkMode,setIsDarkMode,currentUser, setActiveCollect}) {
   const boards = useSelector(boardsSelector)
   const selectedBoardId = useSelector(selectedBoardIdSelector)
   const [isChecked, setIsChecked] = useState(true);
@@ -18,6 +18,14 @@ function Header({currentUser, setActiveCollect}) {
   const [showModalEditDetailBoard, setShowModalEditDetailBoard] = useState(false);
   const [showModalLogout, setShowModalLogout] = useState(false);
   const board = boards.find((board) => board.id === selectedBoardId);
+
+  const toggleTheme = () => {
+    setIsChecked(!isChecked);
+    const body = document.querySelector('body');
+    body.style.backgroundColor = isChecked ? '#ffffff' : '#111214';
+    body.style.color = isChecked ? '#111214' : '#ffffff';
+    setIsDarkMode(!isDarkMode);
+  };
 
   return (
     <div className="header-container">
@@ -30,7 +38,7 @@ function Header({currentUser, setActiveCollect}) {
               <label className="switch btn-color-mode-switch">
                   <input 
                   checked={isChecked}
-                  onChange={() => setIsChecked(!isChecked)}
+                  onChange={() => {setIsChecked(!isChecked); toggleTheme();}}
                   type="checkbox" name="color_mode" id="color_mode" value="1"></input>
                   <label htmlFor="color_mode" data-on="Dark" data-off="Light" className="btn-color-mode-switch-inner"></label>
               </label>
